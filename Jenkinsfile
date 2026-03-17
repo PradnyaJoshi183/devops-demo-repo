@@ -10,12 +10,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git 'git@github.com:PradnyaJoshi183/devops-demo-repo.git'
-            }
-        }
-
         stage('Build Image') {
             steps {
                 sh 'docker build -t demo-app .'
