@@ -3,14 +3,16 @@ pipeline {
 
     environment {
         AWS_REGION = "ap-south-1"
-        ECR_REPO = "ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/demo-app"
+        ACCOUNT_ID = "277528343142"
+        ECR_REPO = "277528343142.dkr.ecr.ap-south-1.amazonaws.com/demo-app"
+        TARGET_IP = "13.202.101.183"
     }
 
     stages {
 
         stage('Clone Code') {
             steps {
-                git 'git@github.com:YOUR_USERNAME/demo-app.git'
+                git 'git@github.com:PradnyaJoshi183/demo-app.git'
             }
         }
 
@@ -24,7 +26,7 @@ pipeline {
             steps {
                 sh '''
                 aws ecr get-login-password --region $AWS_REGION | \
-                docker login --username AWS --password-stdin $ECR_REPO
+                docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
                 '''
             }
         }
@@ -45,8 +47,8 @@ pipeline {
             steps {
                 sshagent(['server-key']) {
                     sh '''
-                    ssh ubuntu@TARGET_IP "
-                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
+                    ssh -o StrictHostKeyChecking=no ubuntu@$TARGET_IP "
+                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
                     docker pull $ECR_REPO:latest
                     docker stop demo || true
                     docker rm demo || true
