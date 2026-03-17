@@ -12,7 +12,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git 'git@github.com:PradnyaJoshi183/demo-app.git'
+                git 'git@github.com:PradnyaJoshi183/devops-demo-repo.git'
             }
         }
 
